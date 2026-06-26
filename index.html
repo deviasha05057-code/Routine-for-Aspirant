@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#11151D" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="manifest" href="manifest.json" />
+<link rel="icon" href="icon-192.png" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<title>रोज़नामचा — Daily Prep Register</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Devanagari+Hindi:ital@0;1&family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=Hind:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink-night:#11151D;
+    --ink-night-2:#161C27;
+    --ink-night-3:#1C2330;
+    --night-border:#2A3242;
+    --night-text:#E7E1CF;
+    --night-text-muted:#9C9A8C;
+
+    --ledger-paper:#F2E8D5;
+    --ledger-paper-2:#EAE0C9;
+    --paper-border:#CDBE93;
+    --rule-line: rgba(173,150,95,0.32);
+    --ink-text:#211C12;
+    --ink-text-muted:#6E6553;
+
+    --stamp-red:#9C3B2E;
+    --stamp-red-dark:#7A2C21;
+    --brass-gold:#C99A3E;
+    --brass-gold-dim:#A87F33;
+
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:24px; --sp-6:32px; --sp-7:48px;
+    --radius-card:14px;
+    --max-w:560px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html,body{ background:var(--ink-night); }
+
+  body{
+    font-family:'Hind','Noto Sans Devanagari',system-ui,sans-serif;
+    color:var(--night-text);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(201,154,62,0.10), transparent 60%),
+      var(--ink-night);
+  }
+
+  h1,h2,h3{ font-family:'Tiro Devanagari Hindi','Source Serif 4',serif; font-weight:700; letter-spacing:0.2px; }
+
+  .mono{ font-family:'IBM Plex Mono',monospace; }
+
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+  input, textarea{ font-family:inherit; color:inherit; }
+
+  *:focus-visible{ outline:2px solid var(--brass-gold); outline-offset:2px; border-radius:4px; }
+
+  .page{
+    max-width:var(--max-w);
+    margin:0 auto;
+    min-height:100vh;
+    padding-bottom:var(--sp-7);
+    position:relative;
+  }
+
+  .top-rule{
+    height:3px;
+    background:linear-gradient(90deg, transparent, var(--brass-gold) 20%, var(--brass-gold) 80%, transparent);
+    opacity:0.85;
+  }
+
+  /* ---------- Letterhead ---------- */
+  .letterhead{
+    display:flex;
+    align-items:flex-start;
+    gap:var(--sp-3);
+    padding:var(--sp-5) var(--sp-4) var(--sp-4);
+  }
+
+  .seal-mark{
+    flex:0 0 auto;
+    width:46px; height:46px;
+    position:relative;
+    margin-top:2px;
+  }
+  .seal-mark .pg{
+    position:absolute;
+    width:30px; height:38px;
+    border:1.6px solid var(--brass-gold);
+    border-radius:2px;
+    background:rgba(201,154,62,0.06);
+  }
+  .seal-mark .pg::before, .seal-mark .pg::after{
+    content:'';
+    position:absolute; left:5px; right:5px; height:1.4px;
+    background:var(--brass-gold-dim);
+  }
+  .seal-mark .pg::before{ top:9px; }
+  .seal-mark .pg::after{ top:16px; }
+  .seal-mark .pg1{ left:0; top:6px; transform:rotate(-9deg); z-index:1; }
+  .seal-mark .pg2{ left:10px; top:0; transform:rotate(7deg); z-index:2; }
+
+  .letterhead-text{ flex:1 1 auto; min-width:0; }
+  .letterhead-text h1{ font-size:26px; color:var(--night-text); line-height:1.1; }
+  .letterhead-text .sub-en{ font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--brass-gold); margin-top:3px; }
+  .letterhead-text .tagline{ font-size:13px; color:var(--night-text-muted); margin-top:var(--sp-2); }
+
+  .date-block{
+    flex:0 0 auto;
+    text-align:right;
+    font-family:'IBM Plex Mono',monospace;
+  }
+  .date-block .d-hi{ font-size:13px; color:var(--night-text); white-space:nowrap; }
+  .date-block .d-en{ font-size:10.5px; color:var(--night-text-muted); margin-top:2px; }
+
+  /* ---------- Tabs ---------- */
+  .tabs{
+    display:flex;
+    gap:2px;
+    padding:0 var(--sp-4);
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .tab{
+    flex:0 0 auto;
+    padding:var(--sp-3) var(--sp-4);
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--night-text-muted);
+    border:1px solid var(--night-border);
+    border-bottom:none;
+    border-radius:10px 10px 0 0;
+    background:var(--ink-night-2);
+    transform:translateY(1px);
+  }
+  .tab.active{
+    color:var(--ledger-paper);
+    background:var(--ink-night-3);
+    border-color:var(--brass-gold-dim);
+  }
+
+  main{
+    background:var(--ink-night-3);
+    border-top:1px solid var(--night-border);
+    padding:var(--sp-5) var(--sp-4);
+    min-height:50vh;
+  }
+  .panel{ display:none; animation:fadeUp 0.35s ease; }
+  .panel.active{ display:block; }
+  @keyframes fadeUp{ from{ opacity:0; transform:translateY(6px); } to{ opacity:1; transform:translateY(0); } }
+
+  .panel h2{
+    font-size:16px;
+    color:var(--night-text);
+    margin-bottom:var(--sp-3);
+  }
+
+  /* ---------- Stamp button ---------- */
+  .stamp-wrap{ display:flex; flex-direction:column; align-items:center; padding:var(--sp-4) 0 var(--sp-5); }
+
+  .stamp-btn{
+    width:148px; height:148px;
+    border-radius:50%;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:4px;
+    border:3px dashed var(--brass-gold-dim);
+    background:rgba(201,154,62,0.05);
+    color:var(--brass-gold);
+    font-weight:600;
+    font-size:14px;
+    text-align:center;
+    transition:transform 0.15s ease;
+    position:relative;
+  }
+  .stamp-btn .icon-tick{ font-size:22px; line-height:1; }
+  .stamp-btn:active{ transform:scale(0.97); }
+
+  .stamp-btn.is-present{
+    border:3px solid var(--stamp-red);
+    background:
+      radial-gradient(circle at 50% 40%, rgba(255,255,255,0.06), transparent 60%),
+      var(--stamp-red);
+    color:var(--ledger-paper);
+    box-shadow:0 0 0 4px rgba(156,59,46,0.18), inset 0 0 0 1px rgba(0,0,0,0.15);
+  }
+  .stamp-btn.is-present .stamp-date{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    opacity:0.9;
+  }
+
+  .stamp-btn.stamping{ animation:stampDown 0.42s ease; }
+  @keyframes stampDown{
+    0%{ transform:scale(1.5) rotate(-10deg); opacity:0.4; }
+    55%{ transform:scale(0.93) rotate(2deg); opacity:1; }
+    100%{ transform:scale(1) rotate(0deg); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .stamp-btn.stamping{ animation:none; }
+  }
+
+  .stamp-status{ margin-top:var(--sp-3); font-size:13px; color:var(--night-text-muted); text-align:center; }
+
+  /* ---------- Stats row ---------- */
+  .stats-row{
+    display:flex;
+    gap:var(--sp-2);
+    margin-bottom:var(--sp-5);
+  }
+  .stat{
+    flex:1;
+    text-align:center;
+    background:var(--ink-night-2);
+    border:1px solid var(--night-border);
+    border-radius:10px;
+    padding:var(--sp-3) var(--sp-1);
+  }
+  .stat-num{ display:block; font-size:22px; font-weight:600; color:var(--brass-gold); }
+  .stat-label{ display:block; font-size:10.5px; color:var(--night-text-muted); margin-top:2px; }
+
+  /* ---------- Ledger blocks (cream paper panels) ---------- */
+  .ledger-block{
+    background:
+      repeating-linear-gradient(to bottom, transparent, transparent 26px, var(--rule-line) 27px),
+      var(--ledger-paper);
+    border:1px solid var(--paper-border);
+    border-radius:var(--radius-card);
+    padding:var(--sp-4);
+    margin-bottom:var(--sp-4);
+    color:var(--ink-text);
+  }
+  .ledger-block h2{ color:var(--ink-text); }
+  .ledger-block .muted{ color:var(--ink-text-muted); font-size:13px; }
+
+  /* subject progress mini-list on dashboard */
+  .progress-list{ display:flex; flex-direction:column; gap:var(--sp-3); }
+  .progress-row{ }
+  .progress-row-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px; }
+  .progress-row-top .pname{ font-weight:600; font-size:14px; }
+  .progress-row-top .pfrac{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-text-muted); }
+  .progress-track{ height:8px; border-radius:5px; background:var(--ledger-paper-2); border:1px solid var(--paper-border); overflow:hidden; }
+  .progress-fill{ height:100%; background:linear-gradient(90deg, var(--stamp-red), var(--brass-gold)); border-radius:5px; transition:width 0.3s ease; }
+
+  /* ---------- Task form / list ---------- */
+  .task-form{ display:flex; gap:var(--sp-2); margin-bottom:var(--sp-3); }
+  .task-form input{
+    flex:1; padding:10px 12px; border:1px solid var(--paper-border); border-radius:8px;
+    background:#fff; font-size:14px; color:var(--ink-text);
+  }
+  .task-form button, .inline-form button{
+    background:var(--stamp-red); color:var(--ledger-paper); padding:10px 14px; border-radius:8px; font-weight:600; font-size:13.5px; white-space:nowrap;
+  }
+  .field-error{ color:var(--stamp-red); font-size:12px; margin:-4px 0 8px; }
+
+  .task-list{ list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .task-list li{ display:flex; align-items:center; gap:10px; padding:8px 0; border-bottom:1px dashed var(--rule-line); }
+  .task-list li:last-child{ border-bottom:none; }
+  .task-list input[type="checkbox"]{ width:18px; height:18px; accent-color:var(--stamp-red); flex:0 0 auto; }
+  .task-list .t-text{ flex:1; font-size:14px; }
+  .task-list .t-text.done{ text-decoration:line-through; color:var(--ink-text-muted); }
+  .icon-btn{ flex:0 0 auto; color:var(--ink-text-muted); font-size:15px; padding:4px 6px; }
+  .icon-btn:hover{ color:var(--stamp-red); }
+
+  .empty-note{ font-size:13.5px; color:var(--ink-text-muted); padding:var(--sp-2) 0; }
+
+  /* ---------- Subjects tab ---------- */
+  .subjects-header{ margin-bottom:var(--sp-4); }
+  .inline-form{ display:flex; gap:var(--sp-2); margin-top:var(--sp-2); }
+  .inline-form input{
+    flex:1; padding:10px 12px; border-radius:8px; border:1px solid var(--night-border);
+    background:var(--ink-night-2); color:var(--night-text); font-size:14px;
+  }
+
+  .subject-card{ margin-bottom:var(--sp-4); }
+  .subject-card-head{ display:flex; align-items:center; gap:var(--sp-2); margin-bottom:var(--sp-2); }
+  .subject-card-head h3{ flex:1; font-size:16px; color:var(--ink-text); }
+  .subject-frac{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--ink-text-muted); }
+
+  .chapter-list{ list-style:none; margin-top:var(--sp-3); display:flex; flex-direction:column; }
+  .chapter-list li{ display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px dashed var(--rule-line); }
+  .chapter-list li:last-child{ border-bottom:none; }
+  .chapter-list label{ flex:1; display:flex; align-items:center; gap:10px; font-size:14px; cursor:pointer; }
+  .chapter-list input[type="checkbox"]{ width:17px; height:17px; accent-color:var(--stamp-red); }
+  .chapter-list .c-text.done{ text-decoration:line-through; color:var(--ink-text-muted); }
+
+  details.add-chapter{ margin-top:var(--sp-3); }
+  details.add-chapter summary{
+    cursor:pointer; font-size:13.5px; font-weight:600; color:var(--stamp-red); list-style:none;
+  }
+  details.add-chapter summary::-webkit-details-marker{ display:none; }
+  .add-chapter-body{ margin-top:var(--sp-3); display:flex; flex-direction:column; gap:var(--sp-2); }
+  .add-chapter-body input, .add-chapter-body textarea{
+    padding:9px 11px; border:1px solid var(--paper-border); border-radius:8px; background:#fff; font-size:13.5px; color:var(--ink-text);
+  }
+  .add-chapter-body textarea{ min-height:64px; resize:vertical; }
+  .add-chapter-body .row{ display:flex; gap:8px; }
+  .add-chapter-body .row input{ flex:1; }
+  .add-chapter-body button{
+    background:var(--ink-night-3); color:var(--ledger-paper); padding:8px 12px; border-radius:7px; font-size:13px; font-weight:600;
+  }
+  .add-chapter-body .hint{ font-size:11.5px; color:var(--ink-text-muted); }
+
+  .delete-subject{ font-size:13px; }
+
+  /* ---------- Calendar tab ---------- */
+  .calendar-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--sp-4); }
+  .calendar-head h2{ margin:0; color:var(--night-text); }
+  .calendar-head button{ font-size:20px; color:var(--brass-gold); padding:4px 10px; }
+
+  .cal-weekdays, .cal-grid{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .cal-weekdays{ margin-bottom:var(--sp-2); }
+  .cal-weekdays span{ text-align:center; font-size:11px; color:var(--night-text-muted); }
+
+  .cal-cell{
+    aspect-ratio:1; display:flex; align-items:center; justify-content:center; position:relative;
+    border-radius:8px;
+  }
+  .cal-cell.blank{ visibility:hidden; }
+  .cal-cell button{
+    width:100%; height:100%; border-radius:8px; font-family:'IBM Plex Mono',monospace; font-size:12.5px;
+    display:flex; align-items:center; justify-content:center;
+    color:var(--night-text-muted);
+    border:1px solid var(--night-border);
+  }
+  .cal-cell.is-today button{ box-shadow:inset 0 0 0 2px var(--brass-gold); color:var(--night-text); }
+  .cal-cell.present button{ background:var(--stamp-red); color:var(--ledger-paper); border-color:var(--stamp-red-dark); font-weight:600; }
+  .cal-cell.missed button{ border-style:dashed; color:var(--night-text-muted); }
+  .cal-cell.future button{ color:#4A5266; }
+
+  .cal-legend{ display:flex; gap:var(--sp-4); margin:var(--sp-4) 0; font-size:11.5px; color:var(--night-text-muted); flex-wrap:wrap; }
+  .cal-legend .dot{ display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+  .dot.present{ background:var(--stamp-red); }
+  .dot.future{ border:1px solid #4A5266; }
+  .dot.missed{ border:1px dashed var(--night-text-muted); }
+
+  .day-detail{ background:var(--ink-night-2); border:1px solid var(--night-border); border-radius:10px; padding:var(--sp-4); min-height:60px; }
+  .day-detail h3{ font-size:14px; color:var(--night-text); margin-bottom:var(--sp-2); }
+  .day-detail .dd-task{ font-size:13.5px; color:var(--night-text-muted); padding:3px 0; }
+  .day-detail .dd-task.done{ text-decoration:line-through; }
+  .day-detail .dd-journal{ margin-top:var(--sp-2); font-size:13px; color:var(--night-text-muted); font-style:italic; white-space:pre-wrap; }
+
+  /* ---------- Diary tab ---------- */
+  #journalInput{
+    width:100%; min-height:110px; padding:var(--sp-3); border:1px solid var(--paper-border); border-radius:10px;
+    background:#fff; color:var(--ink-text); font-size:14px; resize:vertical;
+  }
+  .diary-save-row{ display:flex; justify-content:flex-end; margin-top:var(--sp-3); margin-bottom:var(--sp-5); }
+  .diary-save-row button{ background:var(--stamp-red); color:var(--ledger-paper); padding:10px 18px; border-radius:8px; font-weight:600; font-size:13.5px; }
+
+  .journal-entry{ background:var(--ink-night-2); border:1px solid var(--night-border); border-radius:10px; padding:var(--sp-3) var(--sp-4); margin-bottom:var(--sp-3); }
+  .journal-entry .je-date{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--brass-gold); }
+  .journal-entry .je-text{ font-size:13.5px; color:var(--night-text); margin-top:5px; white-space:pre-wrap; }
+
+  /* ---------- Footer / toast ---------- */
+  footer{ padding:var(--sp-5) var(--sp-4) var(--sp-6); text-align:center; }
+  footer p{ font-size:11.5px; color:var(--night-text-muted); }
+  .link-btn{ color:var(--brass-gold); text-decoration:underline; font-size:11.5px; }
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
+    background:var(--ink-night-3); color:var(--night-text); border:1px solid var(--brass-gold-dim);
+    padding:10px 18px; border-radius:10px; font-size:13px; opacity:0; pointer-events:none;
+    transition:opacity 0.25s ease, transform 0.25s ease; z-index:50; max-width:90%; text-align:center;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  @media (max-width:380px){
+    .stamp-btn{ width:128px; height:128px; }
+    .letterhead-text h1{ font-size:22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="top-rule"></div>
+
+  <header class="letterhead">
+    <div class="seal-mark" aria-hidden="true">
+      <div class="pg pg1"></div>
+      <div class="pg pg2"></div>
+    </div>
+    <div class="letterhead-text">
+      <h1>रोज़नामचा</h1>
+      <div class="sub-en">Daily Prep Register</div>
+      <p class="tagline" id="tagline"></p>
+    </div>
+    <div class="date-block">
+      <div class="d-hi" id="todayHindi"></div>
+      <div class="d-en" id="todayEn"></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab active" data-tab="dashboard" role="tab" aria-selected="true">डैशबोर्ड</button>
+    <button class="tab" data-tab="subjects" role="tab" aria-selected="false">विषय</button>
+    <button class="tab" data-tab="calendar" role="tab" aria-selected="false">कैलेंडर</button>
+    <button class="tab" data-tab="diary" role="tab" aria-selected="false">डायरी</button>
+  </nav>
+
+  <main id="tabContent">
+
+    <!-- DASHBOARD -->
+    <section id="panel-dashboard" class="panel active">
+      <div class="stamp-wrap">
+        <button id="stampBtn" class="stamp-btn" aria-pressed="false"></button>
+        <p class="stamp-status" id="stampStatus"></p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat"><span class="stat-num mono" id="statCurrent">0</span><span class="stat-label">लगातार दिन</span></div>
+        <div class="stat"><span class="stat-num mono" id="statLongest">0</span><span class="stat-label">सबसे लंबी लकीर</span></div>
+        <div class="stat"><span class="stat-num mono" id="statTotal">0</span><span class="stat-label">कुल हाज़िरी</span></div>
+      </div>
+
+      <div class="ledger-block">
+        <h2>विषयवार प्रगति</h2>
+        <div class="progress-list" id="subjectProgressList"></div>
+      </div>
+
+      <div class="ledger-block">
+        <h2>आज का कार्य</h2>
+        <form id="taskForm" class="task-form">
+          <input id="taskInput" type="text" placeholder="जैसे: रीज़निंग चैप्टर 5 के 30 सवाल" aria-label="नया कार्य" />
+          <button type="submit">जोड़ें</button>
+        </form>
+        <div id="taskError" class="field-error" style="display:none;"></div>
+        <ul class="task-list" id="taskList"></ul>
+      </div>
+    </section>
+
+    <!-- SUBJECTS -->
+    <section id="panel-subjects" class="panel">
+      <div class="subjects-header">
+        <h2>अपने विषय और चैप्टर</h2>
+        <form id="subjectForm" class="inline-form">
+          <input id="subjectInput" type="text" placeholder="नया विषय का नाम" aria-label="नया विषय" />
+          <button type="submit">विषय जोड़ें</button>
+        </form>
+        <div id="subjectError" class="field-error" style="display:none;"></div>
+      </div>
+      <div id="subjectsList"></div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section id="panel-calendar" class="panel">
+      <div class="calendar-head">
+        <button id="prevMonth" aria-label="पिछला महीना">‹</button>
+        <h2 id="calMonthLabel"></h2>
+        <button id="nextMonth" aria-label="अगला महीना">›</button>
+      </div>
+      <div class="cal-weekdays" id="calWeekdays"></div>
+      <div class="cal-grid" id="calGrid"></div>
+      <div class="cal-legend">
+        <span><i class="dot present"></i>हाज़िर</span>
+        <span><i class="dot missed"></i>छूटा हुआ</span>
+        <span><i class="dot future"></i>आने वाला</span>
+      </div>
+      <div class="day-detail" id="dayDetail">
+        <p class="empty-note">किसी भी तारीख़ पर टैप करके उस दिन की जानकारी देखो।</p>
+      </div>
+    </section>
+
+    <!-- DIARY -->
+    <section id="panel-diary" class="panel">
+      <h2 id="diaryHeading">आज की एंट्री</h2>
+      <textarea id="journalInput" placeholder="आज कैसी पढ़ाई हुई? क्या अटका, क्या समझ आया, कल क्या करना है..."></textarea>
+      <div class="diary-save-row">
+        <button id="saveJournal">एंट्री सेव करें</button>
+      </div>
+      <h2>पुरानी एंट्रीज़</h2>
+      <div id="journalHistory"></div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>डेटा सिर्फ इस डिवाइस पर सेव है, किसी सर्वर पर नहीं जाता। &nbsp;•&nbsp; <button id="resetBtn" class="link-btn">सारा डेटा रीसेट करें</button></p>
+  </footer>
+</div>
+
+<div class="toast" id="toast" aria-live="polite"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- constants ---------------- */
+  var HINDI_MONTHS = ["जनवरी","फ़रवरी","मार्च","अप्रैल","मई","जून","जुलाई","अगस्त","सितंबर","अक्टूबर","नवंबर","दिसंबर"];
+  var HINDI_DAYS_FULL = ["रविवार","सोमवार","मंगलवार","बुधवार","गुरुवार","शुक्रवार","शनिवार"];
+  var HINDI_DAYS_SHORT = ["र","सो","मं","बु","गु","शु","श"];
+
+  var TAGLINES = [
+    "मोटिवेशन की ज़रूरत नहीं, आज की हाज़िरी चाहिए।",
+    "एक दिन छूटे तो ठीक है, लगातार दो दिन मत छोड़ना।",
+    "सिलेबस बड़ा है, आज का लक्ष्य छोटा और पक्का रखो।",
+    "जो रोज़ आता है, उसका नाम फाइनल लिस्ट में आता है।",
+    "रिवीज़न के बिना पढ़ाई अधूरी रहती है।",
+    "आज की मेहनत एडमिट कार्ड पर नहीं, रिज़ल्ट पर दिखती है।",
+    "थोड़ा पढ़ो, रोज़ पढ़ो, बहाना मत ढूंढो।",
+    "कटऑफ का इंतज़ार मत करो, तैयारी आज से बढ़ाओ।",
+    "जो आज अटक गया, उसे कल के लिए मत टालो।",
+    "लगातार रहना, तेज़ रहने से ज़्यादा ज़रूरी है।",
+    "हर चैप्टर टिक होना मतलब एक कदम पास होना।",
+    "रजिस्टर झूठ नहीं बोलता, खुद देख लो कितने दिन हाज़िर रहे।"
+  ];
+
+  var STORAGE_KEY = "roznamcha-state";
+
+  /* ---------------- state ---------------- */
+  var state = null;
+  var calViewDate = new Date();
+  calViewDate.setDate(1);
+  var resetArmed = false;
+  var resetTimer = null;
+
+  /* ---------------- helpers ---------------- */
+  function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+
+  function pad2(n){ return n < 10 ? "0" + n : "" + n; }
+
+  function formatKey(d){ return d.getFullYear() + "-" + pad2(d.getMonth()+1) + "-" + pad2(d.getDate()); }
+
+  function todayKey(){ return formatKey(new Date()); }
+
+  function parseKey(key){
+    var parts = key.split("-");
+    return new Date(parseInt(parts[0],10), parseInt(parts[1],10)-1, parseInt(parts[2],10));
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
+  }
+
+  function showToast(msg){
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._hideTimer);
+    t._hideTimer = setTimeout(function(){ t.classList.remove("show"); }, 2200);
+  }
+
+  function isPresent(key){
+    return !!(state.dailyLogs[key] && state.dailyLogs[key].present);
+  }
+
+  function ensureLog(key){
+    if(!state.dailyLogs[key]){
+      state.dailyLogs[key] = { present:false, tasks:[], journal:"" };
+    }
+    return state.dailyLogs[key];
+  }
+
+  /* ---------------- storage ---------------- */
+  function defaultState(){
+    return {
+      subjects: [
+        { id: uid(), name: "Reasoning", chapters: [] },
+        { id: uid(), name: "Maths", chapters: [] },
+        { id: uid(), name: "GK/GA", chapters: [] },
+        { id: uid(), name: "Science", chapters: [] }
+      ],
+      dailyLogs: {}
+    };
+  }
+
+  function loadState(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(raw){
+        try{ return Promise.resolve(JSON.parse(raw)); }
+        catch(e){ return Promise.resolve(defaultState()); }
+      }
+    }catch(e){ /* localStorage unavailable (e.g. private mode) */ }
+    return Promise.resolve(defaultState());
+  }
+
+  function saveState(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }catch(e){
+      showToast("सेव नहीं हो पाया — ब्राउज़र स्टोरेज ब्लॉक है");
+    }
+    return Promise.resolve();
+  }
+
+  /* ---------------- streak (recomputed each time, no drift) ---------------- */
+  function getStreakStats(){
+    var dates = Object.keys(state.dailyLogs).filter(function(k){ return state.dailyLogs[k].present; }).sort();
+    var total = dates.length;
+
+    var longest = 0, run = 0, prevDate = null;
+    for(var i=0;i<dates.length;i++){
+      var d = parseKey(dates[i]);
+      if(prevDate){
+        var diff = Math.round((d - prevDate) / 86400000);
+        run = (diff === 1) ? run + 1 : 1;
+      } else {
+        run = 1;
+      }
+      longest = Math.max(longest, run);
+      prevDate = d;
+    }
+
+    var current = 0;
+    var cursor = new Date();
+    var cursorKey = formatKey(cursor);
+    if(!isPresent(cursorKey)){
+      cursor.setDate(cursor.getDate()-1);
+      cursorKey = formatKey(cursor);
+    }
+    while(isPresent(cursorKey)){
+      current++;
+      cursor.setDate(cursor.getDate()-1);
+      cursorKey = formatKey(cursor);
+    }
+
+    return { current: current, longest: longest, total: total };
+  }
+
+  /* ---------------- tagline / header date ---------------- */
+  function dayOfYear(d){
+    var start = new Date(d.getFullYear(),0,0);
+    return Math.floor((d - start) / 86400000);
+  }
+
+  function initHeader(){
+    var now = new Date();
+    document.getElementById("todayHindi").textContent =
+      HINDI_DAYS_FULL[now.getDay()] + ", " + now.getDate() + " " + HINDI_MONTHS[now.getMonth()];
+    document.getElementById("todayEn").textContent = formatKey(now);
+    document.getElementById("tagline").textContent = TAGLINES[dayOfYear(now) % TAGLINES.length];
+    document.getElementById("diaryHeading").textContent = "आज की एंट्री — " + now.getDate() + " " + HINDI_MONTHS[now.getMonth()];
+  }
+
+  /* ---------------- tabs ---------------- */
+  function bindTabs(){
+    var tabs = document.querySelectorAll(".tab");
+    tabs.forEach(function(tab){
+      tab.addEventListener("click", function(){
+        tabs.forEach(function(t){ t.classList.remove("active"); t.setAttribute("aria-selected","false"); });
+        tab.classList.add("active");
+        tab.setAttribute("aria-selected","true");
+        document.querySelectorAll(".panel").forEach(function(p){ p.classList.remove("active"); });
+        document.getElementById("panel-" + tab.dataset.tab).classList.add("active");
+      });
+    });
+  }
+
+  /* ---------------- dashboard render ---------------- */
+  function renderStampButton(){
+    var btn = document.getElementById("stampBtn");
+    var status = document.getElementById("stampStatus");
+    var key = todayKey();
+    var present = isPresent(key);
+    btn.classList.toggle("is-present", present);
+    btn.setAttribute("aria-pressed", present ? "true" : "false");
+
+    if(present){
+      btn.innerHTML = '<span class="icon-tick">✓</span><span>उपस्थित</span><span class="stamp-date mono">' + key + '</span>';
+      status.textContent = "आज की हाज़िरी लग गई। दोबारा दबाने से हट जाएगी।";
+    } else {
+      btn.innerHTML = '<span>आज की हाज़िरी</span><span>लगाओ</span>';
+      status.textContent = "आज पढ़ाई पूरी होने पर यहाँ दबाओ।";
+    }
+  }
+
+  function renderStats(){
+    var s = getStreakStats();
+    document.getElementById("statCurrent").textContent = s.current;
+    document.getElementById("statLongest").textContent = s.longest;
+    document.getElementById("statTotal").textContent = s.total;
+  }
+
+  function subjectProgress(subj){
+    var total = subj.chapters.length;
+    var done = subj.chapters.filter(function(c){ return c.done; }).length;
+    var pct = total ? Math.round((done/total)*100) : 0;
+    return { total: total, done: done, pct: pct };
+  }
+
+  function renderSubjectProgressList(){
+    var wrap = document.getElementById("subjectProgressList");
+    if(state.subjects.length === 0){
+      wrap.innerHTML = '<p class="empty-note">कोई विषय नहीं है। "विषय" टैब में जाकर पहला विषय जोड़ो।</p>';
+      return;
+    }
+    wrap.innerHTML = state.subjects.map(function(subj){
+      var p = subjectProgress(subj);
+      return '<div class="progress-row">' +
+        '<div class="progress-row-top"><span class="pname">' + escapeHtml(subj.name) + '</span>' +
+        '<span class="pfrac">' + p.done + '/' + p.total + '</span></div>' +
+        '<div class="progress-track"><div class="progress-fill" style="width:' + p.pct + '%"></div></div>' +
+        '</div>';
+    }).join("");
+  }
+
+  function renderTaskList(){
+    var key = todayKey();
+    var log = state.dailyLogs[key];
+    var tasks = (log && log.tasks) ? log.tasks : [];
+    var list = document.getElementById("taskList");
+    if(tasks.length === 0){
+      list.innerHTML = '<p class="empty-note">आज के लिए कोई कार्य नहीं जोड़ा गया। ऊपर से जोड़ो।</p>';
+      return;
+    }
+    list.innerHTML = tasks.map(function(t){
+      return '<li>' +
+        '<input type="checkbox" data-action="toggle-task" data-id="' + t.id + '" ' + (t.done ? "checked" : "") + ' />' +
+        '<span class="t-text' + (t.done ? " done" : "") + '">' + escapeHtml(t.text) + '</span>' +
+        '<button class="icon-btn" data-action="delete-task" data-id="' + t.id + '" aria-label="कार्य हटाएं">✕</button>' +
+        '</li>';
+    }).join("");
+  }
+
+  function renderDashboard(){
+    renderStampButton();
+    renderStats();
+    renderSubjectProgressList();
+    renderTaskList();
+  }
+
+  /* ---------------- subjects render ---------------- */
+  function renderSubjectCard(subj){
+    var p = subjectProgress(subj);
+    var chaptersHtml = subj.chapters.length === 0
+      ? '<p class="empty-note">कोई चैप्टर नहीं जोड़ा गया। नीचे "+ चैप्टर जोड़ें" से शुरू करो।</p>'
+      : '<ul class="chapter-list">' + subj.chapters.map(function(ch){
+          return '<li><label>' +
+            '<input type="checkbox" data-action="toggle-chapter" data-subject="' + subj.id + '" data-chapter="' + ch.id + '" ' + (ch.done ? "checked" : "") + ' />' +
+            '<span class="c-text' + (ch.done ? " done" : "") + '">' + escapeHtml(ch.name) + '</span>' +
+            '</label>' +
+            '<button class="icon-btn" data-action="delete-chapter" data-subject="' + subj.id + '" data-chapter="' + ch.id + '" aria-label="चैप्टर हटाएं">✕</button>' +
+            '</li>';
+        }).join("") + '</ul>';
+
+    return '<article class="ledger-block subject-card" data-subject="' + subj.id + '">' +
+      '<div class="subject-card-head">' +
+        '<h3>' + escapeHtml(subj.name) + '</h3>' +
+        '<span class="subject-frac mono">' + p.done + '/' + p.total + '</span>' +
+        '<button class="icon-btn delete-subject" data-action="delete-subject" data-subject="' + subj.id + '" aria-label="विषय हटाएं">✕</button>' +
+      '</div>' +
+      '<div class="progress-track"><div class="progress-fill" style="width:' + p.pct + '%"></div></div>' +
+      chaptersHtml +
+      '<details class="add-chapter">' +
+        '<summary>+ चैप्टर जोड़ें</summary>' +
+        '<div class="add-chapter-body">' +
+          '<div class="row">' +
+            '<input type="text" class="single-chapter-input" placeholder="एक चैप्टर का नाम" aria-label="चैप्टर नाम" />' +
+            '<button data-action="add-chapter" data-subject="' + subj.id + '">जोड़ें</button>' +
+          '</div>' +
+          '<textarea class="bulk-chapter-input" placeholder="कई चैप्टर एक साथ जोड़ने के लिए, हर लाइन में एक नाम लिखो"></textarea>' +
+          '<button data-action="add-bulk-chapters" data-subject="' + subj.id + '">सबको जोड़ें</button>' +
+          '<span class="hint">टिप: अपनी पुरानी चैप्टर लिस्ट यहाँ पेस्ट कर सकते हो।</span>' +
+        '</div>' +
+      '</details>' +
+    '</article>';
+  }
+
+  function renderSubjects(){
+    var wrap = document.getElementById("subjectsList");
+    if(state.subjects.length === 0){
+      wrap.innerHTML = '<p class="empty-note">अभी कोई विषय नहीं है। ऊपर से अपना पहला विषय जोड़ो।</p>';
+      return;
+    }
+    wrap.innerHTML = state.subjects.map(renderSubjectCard).join("");
+  }
+
+  /* ---------------- calendar render ---------------- */
+  function renderCalendarWeekdays(){
+    document.getElementById("calWeekdays").innerHTML = HINDI_DAYS_SHORT.map(function(d){
+      return "<span>" + d + "</span>";
+    }).join("");
+  }
+
+  function renderCalendar(){
+    document.getElementById("calMonthLabel").textContent =
+      HINDI_MONTHS[calViewDate.getMonth()] + " " + calViewDate.getFullYear();
+
+    var year = calViewDate.getFullYear();
+    var month = calViewDate.getMonth();
+    var firstDay = new Date(year, month, 1).getDay();
+    var daysInMonth = new Date(year, month+1, 0).getDate();
+    var todayK = todayKey();
+
+    var cells = [];
+    for(var i=0;i<firstDay;i++){
+      cells.push('<div class="cal-cell blank"></div>');
+    }
+    for(var day=1; day<=daysInMonth; day++){
+      var d = new Date(year, month, day);
+      var key = formatKey(d);
+      var cls = "cal-cell";
+      if(key === todayK) cls += " is-today";
+      if(key > todayK) cls += " future";
+      else if(isPresent(key)) cls += " present";
+      else cls += " missed";
+      cells.push('<div class="' + cls + '"><button data-action="view-day" data-date="' + key + '">' + day + '</button></div>');
+    }
+    document.getElementById("calGrid").innerHTML = cells.join("");
+  }
+
+  function renderDayDetail(key){
+    var box = document.getElementById("dayDetail");
+    var log = state.dailyLogs[key];
+    var d = parseKey(key);
+    var heading = HINDI_DAYS_FULL[d.getDay()] + ", " + d.getDate() + " " + HINDI_MONTHS[d.getMonth()] + " " + d.getFullYear();
+
+    if(!log || (!log.present && log.tasks.length === 0 && !log.journal)){
+      box.innerHTML = '<h3>' + heading + '</h3><p class="empty-note">इस दिन के लिए कोई जानकारी सेव नहीं है।</p>';
+      return;
+    }
+
+    var tasksHtml = (log.tasks && log.tasks.length)
+      ? log.tasks.map(function(t){
+          return '<div class="dd-task' + (t.done ? " done" : "") + '">' + (t.done ? "✓ " : "• ") + escapeHtml(t.text) + '</div>';
+        }).join("")
+      : '<p class="empty-note">कोई कार्य नहीं जोड़ा गया था।</p>';
+
+    var journalHtml = log.journal ? '<p class="dd-journal">' + escapeHtml(log.journal) + '</p>' : "";
+
+    box.innerHTML = '<h3>' + heading + (log.present ? " — हाज़िर ✓" : "") + '</h3>' + tasksHtml + journalHtml;
+  }
+
+  /* ---------------- diary render ---------------- */
+  function renderDiary(){
+    var key = todayKey();
+    var log = state.dailyLogs[key];
+    document.getElementById("journalInput").value = (log && log.journal) ? log.journal : "";
+
+    var entries = Object.keys(state.dailyLogs)
+      .filter(function(k){ return state.dailyLogs[k].journal; })
+      .sort()
+      .reverse();
+
+    var hist = document.getElementById("journalHistory");
+    if(entries.length === 0){
+      hist.innerHTML = '<p class="empty-note">अभी कोई पुरानी एंट्री नहीं है।</p>';
+      return;
+    }
+    hist.innerHTML = entries.map(function(k){
+      var d = parseKey(k);
+      var label = d.getDate() + " " + HINDI_MONTHS[d.getMonth()] + " " + d.getFullYear();
+      return '<div class="journal-entry"><div class="je-date mono">' + label + '</div>' +
+        '<div class="je-text">' + escapeHtml(state.dailyLogs[k].journal) + '</div></div>';
+    }).join("");
+  }
+
+  function renderAll(){
+    renderDashboard();
+    renderSubjects();
+    renderCalendarWeekdays();
+    renderCalendar();
+    renderDiary();
+  }
+
+  /* ---------------- event binding ---------------- */
+  function bindStamp(){
+    document.getElementById("stampBtn").addEventListener("click", function(){
+      var key = todayKey();
+      var log = ensureLog(key);
+      log.present = !log.present;
+      var btn = document.getElementById("stampBtn");
+      if(log.present){
+        btn.classList.remove("stamping");
+        void btn.offsetWidth;
+        btn.classList.add("stamping");
+      }
+      saveState();
+      renderStampButton();
+      renderStats();
+      renderCalendar();
+    });
+  }
+
+  function bindTaskForm(){
+    var form = document.getElementById("taskForm");
+    var input = document.getElementById("taskInput");
+    var err = document.getElementById("taskError");
+
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var text = input.value.trim();
+      if(!text){
+        err.textContent = "कार्य लिखना ज़रूरी है।";
+        err.style.display = "block";
+        return;
+      }
+      err.style.display = "none";
+      var log = ensureLog(todayKey());
+      log.tasks.push({ id: uid(), text: text, done: false });
+      input.value = "";
+      saveState();
+      renderTaskList();
+    });
+
+    document.getElementById("taskList").addEventListener("click", function(e){
+      var actEl = e.target.closest("[data-action]");
+      if(!actEl) return;
+      var log = state.dailyLogs[todayKey()];
+      if(!log) return;
+      var id = actEl.dataset.id;
+      if(actEl.dataset.action === "delete-task"){
+        log.tasks = log.tasks.filter(function(t){ return t.id !== id; });
+        saveState();
+        renderTaskList();
+      }
+    });
+
+    document.getElementById("taskList").addEventListener("change", function(e){
+      var actEl = e.target.closest("[data-action='toggle-task']");
+      if(!actEl) return;
+      var log = state.dailyLogs[todayKey()];
+      if(!log) return;
+      var task = log.tasks.find(function(t){ return t.id === actEl.dataset.id; });
+      if(task){ task.done = actEl.checked; saveState(); renderTaskList(); }
+    });
+  }
+
+  function bindSubjectForm(){
+    var form = document.getElementById("subjectForm");
+    var input = document.getElementById("subjectInput");
+    var err = document.getElementById("subjectError");
+
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var name = input.value.trim();
+      if(!name){
+        err.textContent = "विषय का नाम लिखना ज़रूरी है।";
+        err.style.display = "block";
+        return;
+      }
+      err.style.display = "none";
+      state.subjects.push({ id: uid(), name: name, chapters: [] });
+      input.value = "";
+      saveState();
+      renderSubjects();
+      renderSubjectProgressList();
+    });
+
+    var list = document.getElementById("subjectsList");
+
+    list.addEventListener("click", function(e){
+      var actEl = e.target.closest("[data-action]");
+      if(!actEl) return;
+      var action = actEl.dataset.action;
+      var subjId = actEl.dataset.subject;
+      var subj = state.subjects.find(function(s){ return s.id === subjId; });
+
+      if(action === "delete-subject"){
+        state.subjects = state.subjects.filter(function(s){ return s.id !== subjId; });
+        saveState(); renderSubjects(); renderSubjectProgressList();
+        return;
+      }
+      if(!subj) return;
+
+      if(action === "delete-chapter"){
+        subj.chapters = subj.chapters.filter(function(c){ return c.id !== actEl.dataset.chapter; });
+        saveState(); renderSubjects(); renderSubjectProgressList();
+        return;
+      }
+      if(action === "add-chapter"){
+        var card = actEl.closest(".subject-card");
+        var inp = card.querySelector(".single-chapter-input");
+        var name = inp.value.trim();
+        if(!name) return;
+        subj.chapters.push({ id: uid(), name: name, done:false });
+        inp.value = "";
+        saveState(); renderSubjects(); renderSubjectProgressList();
+        return;
+      }
+      if(action === "add-bulk-chapters"){
+        var card2 = actEl.closest(".subject-card");
+        var ta = card2.querySelector(".bulk-chapter-input");
+        var lines = ta.value.split("\n").map(function(l){ return l.trim(); }).filter(Boolean);
+        if(lines.length === 0) return;
+        lines.forEach(function(name){ subj.chapters.push({ id: uid(), name: name, done:false }); });
+        ta.value = "";
+        saveState(); renderSubjects(); renderSubjectProgressList();
+        return;
+      }
+    });
+
+    list.addEventListener("change", function(e){
+      var actEl = e.target.closest("[data-action='toggle-chapter']");
+      if(!actEl) return;
+      var subj = state.subjects.find(function(s){ return s.id === actEl.dataset.subject; });
+      if(!subj) return;
+      var ch = subj.chapters.find(function(c){ return c.id === actEl.dataset.chapter; });
+      if(ch){ ch.done = actEl.checked; saveState(); renderSubjects(); renderSubjectProgressList(); }
+    });
+  }
+
+  function bindCalendar(){
+    document.getElementById("prevMonth").addEventListener("click", function(){
+      calViewDate.setMonth(calViewDate.getMonth()-1);
+      renderCalendar();
+    });
+    document.getElementById("nextMonth").addEventListener("click", function(){
+      calViewDate.setMonth(calViewDate.getMonth()+1);
+      renderCalendar();
+    });
+    document.getElementById("calGrid").addEventListener("click", function(e){
+      var actEl = e.target.closest("[data-action='view-day']");
+      if(!actEl) return;
+      renderDayDetail(actEl.dataset.date);
+    });
+  }
+
+  function bindDiary(){
+    document.getElementById("saveJournal").addEventListener("click", function(){
+      var text = document.getElementById("journalInput").value.trim();
+      var log = ensureLog(todayKey());
+      log.journal = text;
+      saveState();
+      showToast(text ? "एंट्री सेव हो गई।" : "एंट्री खाली सेव हो गई।");
+      renderDiary();
+    });
+  }
+
+  function bindReset(){
+    var btn = document.getElementById("resetBtn");
+    btn.addEventListener("click", function(){
+      if(!resetArmed){
+        resetArmed = true;
+        btn.textContent = "पक्का? फिर से दबाओ";
+        resetTimer = setTimeout(function(){
+          resetArmed = false;
+          btn.textContent = "सारा डेटा रीसेट करें";
+        }, 4000);
+        return;
+      }
+      clearTimeout(resetTimer);
+      resetArmed = false;
+      btn.textContent = "सारा डेटा रीसेट करें";
+      state = defaultState();
+      saveState();
+      renderAll();
+      showToast("सारा डेटा रीसेट हो गया।");
+    });
+  }
+
+  /* ---------------- init ---------------- */
+  function init(){
+    initHeader();
+    bindTabs();
+    bindStamp();
+    bindTaskForm();
+    bindSubjectForm();
+    bindCalendar();
+    bindDiary();
+    bindReset();
+
+    loadState().then(function(s){
+      state = s;
+      renderAll();
+    });
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+</script>
+
+<script>
+  if("serviceWorker" in navigator){
+    window.addEventListener("load", function(){
+      navigator.serviceWorker.register("sw.js").catch(function(){ /* offline caching unavailable, app still works online */ });
+    });
+  }
+</script>
+</body>
+</html>
